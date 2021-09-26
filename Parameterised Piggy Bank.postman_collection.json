@@ -1,0 +1,494 @@
+{
+	"info": {
+		"_postman_id": "325ba85e-7093-4291-a2f7-9ab6d56ec8bb",
+		"name": "Parameterised Piggy Bank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create WALLET_1 and store ID and PubKeyHash",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get ID and PKH\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    const WALLET_ID = jsonData.wiWallet.getWalletId",
+							"    const WALLET_PKH = jsonData.wiPubKeyHash.getPubKeyHash",
+							"    pm.collectionVariables.set(\"WALLET_ID_1\", WALLET_ID);",
+							"    pm.collectionVariables.set(\"WALLET_PKH_1\", WALLET_PKH);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/wallet/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"wallet",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create WALLET_2 and store ID and PubKeyHash",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get ID and PKH\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    const WALLET_ID = jsonData.wiWallet.getWalletId",
+							"    const WALLET_PKH = jsonData.wiPubKeyHash.getPubKeyHash",
+							"    pm.collectionVariables.set(\"WALLET_ID_2\", WALLET_ID);",
+							"    pm.collectionVariables.set(\"WALLET_PKH_2\", WALLET_PKH);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/wallet/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"wallet",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create WALLET_3 and store ID and PubKeyHash",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get ID and PKH\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    const WALLET_ID = jsonData.wiWallet.getWalletId",
+							"    const WALLET_PKH = jsonData.wiPubKeyHash.getPubKeyHash",
+							"    pm.collectionVariables.set(\"WALLET_ID_3\", WALLET_ID);",
+							"    pm.collectionVariables.set(\"WALLET_PKH_3\", WALLET_PKH);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/wallet/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"wallet",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Instantiate INSTANCE_1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Create instance and get value in INSTANCE_1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.collectionVariables.set(\"INSTANCE_1\", jsonData.unContractInstanceId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"caID\": \"ParameterisedPiggyBankContract\",\n    \"caWallet\": {\n        \"getWalletId\": \"{{WALLET_ID_1}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/activate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Instantiate INSTANCE_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Create instance and get value in WALLET_2\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.collectionVariables.set(\"INSTANCE_2\", jsonData.unContractInstanceId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"caID\": \"ParameterisedPiggyBankContract\",\n    \"caWallet\": {\n        \"getWalletId\": \"{{WALLET_ID_2}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/activate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Instantiate INSTANCE_3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Create instance and get value in WALLET_3\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.collectionVariables.set(\"INSTANCE_3\", jsonData.unContractInstanceId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"caID\": \"ParameterisedPiggyBankContract\",\n    \"caWallet\": {\n        \"getWalletId\": \"{{WALLET_ID_3}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/activate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put from WALLET_1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ppAmount\": 1000000,\n    \"ppBeneficiary\": {\n        \"getPubKeyHash\": \"{{WALLET_PKH_3}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/instance/{{INSTANCE_1}}/endpoint/put",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"instance",
+						"{{INSTANCE_1}}",
+						"endpoint",
+						"put"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put from WALLET_2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ppAmount\": 1000000,\n    \"ppBeneficiary\": {\n        \"getPubKeyHash\": \"{{WALLET_PKH_3}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/instance/{{INSTANCE_2}}/endpoint/put",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"instance",
+						"{{INSTANCE_2}}",
+						"endpoint",
+						"put"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inspect from WALLET_2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"getPubKeyHash\": \"{{WALLET_PKH_3}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/instance/{{INSTANCE_2}}/endpoint/inspect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"instance",
+						"{{INSTANCE_2}}",
+						"endpoint",
+						"inspect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "empty from WALLET_2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/instance/{{INSTANCE_2}}/endpoint/empty",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"instance",
+						"{{INSTANCE_2}}",
+						"endpoint",
+						"empty"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "empty from WALLET_3",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/api/contract/instance/{{INSTANCE_3}}/endpoint/empty",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"contract",
+						"instance",
+						"{{INSTANCE_3}}",
+						"endpoint",
+						"empty"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "WALLET_1",
+			"value": ""
+		},
+		{
+			"key": "WALLET_2",
+			"value": ""
+		},
+		{
+			"key": "WALLET_3",
+			"value": ""
+		},
+		{
+			"key": "WALLET_4",
+			"value": ""
+		},
+		{
+			"key": "WALLET_ID_1",
+			"value": ""
+		},
+		{
+			"key": "WALLET_PKH_1",
+			"value": ""
+		},
+		{
+			"key": "WALLET_ID_2",
+			"value": ""
+		},
+		{
+			"key": "WALLET_PKH_2",
+			"value": ""
+		},
+		{
+			"key": "WALLET_ID_3",
+			"value": ""
+		},
+		{
+			"key": "WALLET_PKH_3",
+			"value": ""
+		},
+		{
+			"key": "INSTANCE_1",
+			"value": ""
+		},
+		{
+			"key": "INSTANCE_2",
+			"value": ""
+		},
+		{
+			"key": "INSTANCE_3",
+			"value": ""
+		}
+	]
+}
