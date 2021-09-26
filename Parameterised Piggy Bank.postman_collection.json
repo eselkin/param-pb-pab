@@ -351,39 +351,6 @@
 			"response": []
 		},
 		{
-			"name": "empty from WALLET_2",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "[]",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9080/api/contract/instance/{{INSTANCE_2}}/endpoint/empty",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9080",
-					"path": [
-						"api",
-						"contract",
-						"instance",
-						"{{INSTANCE_2}}",
-						"endpoint",
-						"empty"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "empty from WALLET_3",
 			"request": {
 				"method": "POST",

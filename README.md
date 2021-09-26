@@ -54,33 +54,32 @@ Afterwards, the command `cabal build` from the terminal should work (if `cabal` 
 Also included in the environment is a working [Haskell Language Server](https://github.com/haskell/haskell-language-server) you can integrate with your editor.
 See [here](https://github.com/haskell/haskell-language-server#configuring-your-editor) for instructions.
 
-## The Plutus Application Backend (PAB) example
+## The Modified Plutus Application Backend (PAB) example - Parameterised Piggy Bank
 
 For this example, it is easiest to use the `Parameterised Piggy Bank.postman_collection.json`
+You can refer to the Postman code to acquire the curl patterns to achieve the same result (but with more manual labor).
 
-We have provided an example PAB application in `./pab`. With the PAB we can serve and interact
-with contracts over a web API. You can read more about the PAB here: [PAB Architecture](https://github.com/input-output-hk/plutus/blob/master/plutus-pab/ARCHITECTURE.adoc).
+---
+**Also, [here](https://youtu.be/deUxZvxzNPA)'s a video of me describing the steps and what this contract does differently.**
 
-Here, the PAB is configured with one contract, the `Game` contract from `./examples/src/Plutus/Contracts/Game.hs`.
+---
 
-Here's an example of running and interacting with this contract via the API. For this it will help if you
-have `jq` installed.
 
 1. Build the PAB executable:
 
 ```
-cabal build plutus-starter-pab
+cabal build -- ppb
 ```
 
 2. Run the PAB binary:
 
 ```
-cabal exec -- plutus-starter-pab
+cabal exec -- ppb
 ````
 
 This will then start up the server on port 9080. The devcontainer process will then automatically expose this port so that you can connect to it from any terminal (it doesn't have to be a terminal running in the devcontainer).
 
-First, let's verify that the game is present in the server:
+First, let's verify that the game is present in the server (you should probably still do this with curl, because it's easy):
 
 3. Check what contracts are present:
 
@@ -91,100 +90,23 @@ curl -s http://localhost:9080/api/contract/definitions | jq
 You should receive a list of contracts and the endpoints that can be called on them, and the arguments
 required for those endpoints.
 
-We're interested in the `GameContract` one.
+We're interested in the `ParameterisedPiggyBankSchema`
+#### To be able to add money to a piggy bank you need wallets with ADA
 
-#### Playing the guessing game over the API
+1. We can make any number of wallets, but the first three requests in the Parameterised Piggy Bank Workspace in Postman create wallets. Execute them by clicking send on each successively. Try not to hit send twice on an endpoint, because there's not much protection for this step.
 
-The game has two players (wallets). One will initialise the contract and lock a value inside. Another
-wallet will then make guesses. Supposing they guess correctly, they'll receive the funds that were
-locked; otherwise, they won't!
+2. Start the contract instances (we're going to make 3, one for each wallet). So click send on each of those requests as well
 
+3. Now we'll put 1.000.000 Lovelace into the piggy bank that is parameterised by Wallet 3's public key hash using the instance from Wallet 1 (The next postman request).
 
-1. Create wallets
-```
-export WALLET_ID_1=`curl -s -d '' http://localhost:9080/wallet/create | jq '.wiWallet.getWalletId' | tr -d \'`
-export WALLET_ID_2=`curl -s -d '' http://localhost:9080/wallet/create | jq '.wiWallet.getWalletId'`
-```
+4. Now we'll do another put of the same amount to the same piggy bank script address using the instance from Wallet 2.
 
-2. Start the instances:
+5. We can test this worked by the next postman request which inspects (using and endpoint of the same name) the piggy bank parameterized by wallet 3's PKH using Wallet 2's instance. The postman request does not return anything (yet... we're still working on that). But you can go to your terminal where you're running the ppb and examine the logs and see that the inspect indeed says there's 2million lovelace at that script address
 
-```
-# Wallet 1
-export INSTANCE_1=$(curl -s -H "Content-Type: application/json" \ 
-  --data '{"caID": "ParameterisedPiggyBankContract", "caWallet":{"getWalletId": "'$WALLET_ID_1'"}}' \
-  http://localhost:9080/api/contract/activate | jq '.unContractInstanceId' | tr -d \")
+6. Now we can leave the money there (wait! who does that!). Wallet 3 wants all the Lovelace! So she empties is using the empty endpoint in the next Postman request.
 
-# Wallet 2
-export INSTANCE_1=$(curl -s -H "Content-Type: application/json" \ 
-  --data '{"caID": "ParameterisedPiggyBankContract", "caWallet":{"getWalletId": "'$WALLET_ID_1'"}}' \
-  http://localhost:9080/api/contract/activate | jq '.unContractInstanceId' | tr -d \")
-```
+7. Finally you can examine the final balances by exiting the PAB with `enter`
 
-From these two queries you will get back two contract instance IDs. These will be needed
-in the subsequent steps for running actions against. We can optionally take a look at the state
-of the contract with the `status` API:
-
-3. Get the status
-
-```
-export INSTANCE_ID=...
-curl -s http://localhost:9080/api/contract/instance/$INSTANCE_ID/status | jq
-```
-
-This has a lot of information; and in particular we can see what endpoints are still available
-to call.
-
-4. Start the game by locking some value inside
-
-Now, let's call the `lock` endpoint to start the game. In order to do so, we need to construct
-a JSON representation of the `LockParams` that the endpoint takes (look at `Game.hs`). The easiest
-way is to simply build the term in haskell and ask `aeson` to encode it. From the terminal:
-
-```
-cabal repl
-> import Plutus.Contracts.Game
-> import Ledger.Ada
-> args = LockParams { secretWord = "eagle", amount = lovelaceValueOf 90 }
-> import Data.Aeson
-> import Data.ByteString.Lazy.Char8 as BSL
-> BSL.putStrLn $ encode args
-{"amount":{"getValue":[[{"unCurrencySymbol":""},[[{"unTokenName":""},90]]]]},"secretWord":"eagle"}
-```
-
-Great! This is all we need to call the `lock` endpoint, so let's do that now with
-the instance from Wallet 1:
-
-5. Lock some value (Wallet 1)
-
-```
-export INSTANCE_ID=...
-curl -H "Content-Type: application/json" \
-  --request POST \
-  --data '{"amount":{"getValue":[[{"unCurrencySymbol":""},[[{"unTokenName":""},90]]]]},"secretWord":"eagle"}' \
-  http://localhost:9080/api/contract/instance/$INSTANCE_ID/endpoint/lock
-```
-
-We can do likewise to work out what the JSON for `GuessParams` is, and then make a guess from
-Wallet 2:
-
-6. Make a guess (Wallet 2)
-
-```
-export INSTANCE_ID=...
-curl -H "Content-Type: application/json" \
-  --request POST \
-  --data '{"guessWord": "duck"}' \
-  http://localhost:9080/api/contract/instance/$INSTANCE_ID/endpoint/guess
-```
-
-Note that this guess is wrong, so in the log of the server we will see that the transaction
-didn't validate.
-
-As an exercise, you can now spin up another instance for Wallet 2 and make a correct guess, and
-confirm that the transaction validates and the Ada is transferred into the right wallet.
-
-Note that you can verify the balances by looking at the log of `plutus-starter-pab`
-when exiting it by pressing return.
 
 Finally, also node that the PAB also exposes a websocket, which you can read about in
 the general [PAB Architecture documentation](https://github.com/input-output-hk/plutus/blob/master/plutus-pab/ARCHITECTURE.adoc).
