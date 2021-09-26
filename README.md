@@ -79,7 +79,6 @@ cabal exec -- ppb
 
 This will then start up the server on port 9080. The devcontainer process will then automatically expose this port so that you can connect to it from any terminal (it doesn't have to be a terminal running in the devcontainer).
 
-First, let's verify that the game is present in the server (you should probably still do this with curl, because it's easy):
 
 3. Check what contracts are present:
 
@@ -87,10 +86,15 @@ First, let's verify that the game is present in the server (you should probably 
 curl -s http://localhost:9080/api/contract/definitions | jq
 ```
 
-You should receive a list of contracts and the endpoints that can be called on them, and the arguments
-required for those endpoints.
+You should receive a list of contracts and the endpoints that can be called on them, and the arguments required for those endpoints.
 
-We're interested in the `ParameterisedPiggyBankSchema`
+**We're interested in the `ParameterisedPiggyBankSchema`**
+
+Here's a real life need for the Parameterised Piggy Bank concept
+```
+Imagine a family of two kids, Jack and Jill, and their parents. Jack and Jill both have their own piggy banks which are script addresses. Dad and Mom can put ADA in either of their piggy banks from their ADA wallets. Each child can withdraw from his/her own piggy bank (and not each other's) into their ADA wallets. Additionally, a piggy bank allows emptying only when more than 1 million lovelace is accumulated in it. These are achieved by the parametrisation of the validator and validation checks.
+```
+
 #### To be able to add money to a piggy bank you need wallets with ADA
 
 1. We can make any number of wallets, but the first three requests in the Parameterised Piggy Bank Workspace in Postman create wallets. Execute them by clicking send on each successively. Try not to hit send twice on an endpoint, because there's not much protection for this step.
